@@ -14,7 +14,7 @@ ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
 // For Entity Framework
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("ConnStr")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("ConnectionString")));
 
 // For Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -24,41 +24,19 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddTransient<ICarService, CarService>();
 // Adding Authentication
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-
-
-// Adding Jwt Bearer
-.AddJwtBearer(options =>
- {
-     options.SaveToken = true;
-     options.RequireHttpsMetadata = false;
-     options.TokenValidationParameters = new TokenValidationParameters()
-     {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidAudience = configuration["JWT:ValidAudience"],
-         ValidIssuer = configuration["JWT:ValidIssuer"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-     };
- });
 
 static void ApplyMigrations(WebApplication app)
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
+        dbContext.Database.EnsureCreated();
         // Check and apply pending migrations
         var pendingMigrations = dbContext.Database.GetPendingMigrations();
         if (pendingMigrations.Any())
         {
             Console.WriteLine("Applying pending migrations...");
-            dbContext.Database.Migrate();
+           // dbContext.Database.Migrate();
             Console.WriteLine("Migrations applied successfully.");
         }
         else
