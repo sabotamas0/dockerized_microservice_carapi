@@ -21,7 +21,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal
       - name: Build Docker image
-        run:  docker build -f CarApi/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/carapi:latest CarApi_Pipeline
+        run:  docker build -f CarApi/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/carapi:latest CarApi
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
