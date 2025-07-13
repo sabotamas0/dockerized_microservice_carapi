@@ -11,6 +11,5 @@ namespace CarApi.Services
         CarModel GetCarByLicenseNumber(string licenseNumber);
         void DeleteCar(CarModel model);
         bool ExistingCar(string licenseNumber);
-        List<string> ValidateCar(CarModel model);
     }
 }

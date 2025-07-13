@@ -32,6 +32,14 @@ namespace CarApi.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route("addCar")]
+        public IActionResult AddCar(CarModel model)
+        {
+            _carService.CreateCar(model);
+            return Ok(model);
+        }
+
         [HttpGet]
         [Route("getByLicense")]
         public IActionResult GetCarByLicenseNumber(string licenseNumber) 
@@ -44,7 +52,6 @@ namespace CarApi.Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpPut]
         [Route("update")]
         public IActionResult UpdateCar(CarDto car, string licenseNumber)
@@ -75,22 +82,6 @@ namespace CarApi.Controllers
             return BadRequest();
         }
 
-        [Authorize]
-        [HttpPost]
-        [Route("create")]
-        public IActionResult CreateCar(CarModel car)
-        {
-            var errors = _carService.ValidateCar(car);
-           
-            if (!errors.Any())
-            {
-                _carService.CreateCar(car);
-                return Ok();
-            }
-            return BadRequest(errors);
-        }
-
-        [Authorize]
         [HttpDelete]
         [Route("delete")]
         public IActionResult DeleteCar(string licenseNumber)

@@ -2,7 +2,6 @@
 using CarApi.Models;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
-using CarApi.Validators;
 using CarApi.Helpers;
 
 namespace CarApi.Services
@@ -51,13 +50,6 @@ namespace CarApi.Services
         {
             _context.Cars.Update(model);
             _context.SaveChanges();
-        }
-
-        public List<string> ValidateCar(CarModel model)
-        {
-            var carValidator = new CarValidator(_context);
-            ValidationResult result = carValidator.Validate(model);
-            return ErrorHelper.GetErrorNames(result.Errors);
         }
     }
 }
